@@ -8,8 +8,7 @@ import {
   Navbar,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-
-import IMAGES from "../../assets"; // Importing images from single "IMAGES" object
+import social from "../../assets/social.png";
 import { AuthState } from "../../context/AuthProvider";
 import ProfileModal from "../ProfileModal/ProfileModal";
 
@@ -32,13 +31,13 @@ const NavigationBar = () => {
       <Container>
         <Navbar.Brand as={Link} to="/">
           <img
-            alt="Advanced Node Authentication Logo"
-            src={IMAGES.logo}
+            alt="social icon"
+            src={social}
             width="30"
             height="30"
             className="d-inline-block align-top"
           />
-          &nbsp;Advanced Node Authentication
+          &nbsp;Mern Stack Social App
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
