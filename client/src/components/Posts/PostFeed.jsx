@@ -1,10 +1,15 @@
 import { useState } from "react";
+import axios from "axios";
+import { AuthState } from "../../context/AuthProvider";
 
 const PostFeed = ({ posts, updatePost, deletePost }) => {
   console.log("Rendering PostFeed with posts:", posts);
 
+  const { auth } = AuthState();
+
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedContent, setEditedContent] = useState("");
+  const [newComment, setNewComment] = useState("");
 
   const startEditing = (postId, currentContent) => {
     setEditingPostId(postId);
@@ -19,6 +24,49 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
   const handleUpdate = () => {
     updatePost(editingPostId, editedContent);
     cancelEditing();
+  };
+
+  const handleLike = async (postId) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/posts/${postId}/like`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        // Update the post with the new likes
+        updatePost(postId, response.data.content); // Adjust as necessary
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleComment = async (postId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/posts/${postId}/comment`,
+        { text: newComment },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        // Update the post with the new comment
+        updatePost(postId, response.data.content); // Adjust as necessary
+        setNewComment("");
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
   };
 
   return (
@@ -71,6 +119,35 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
               >
                 Delete
               </button>
+              <button
+                className="btn btn-info ms-2"
+                onClick={() => handleLike(post._id)}
+              >
+                Like {post.likes.length}
+              </button>
+              <div className="mt-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Write a comment..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                />
+                <button
+                  className="btn btn-secondary mt-2"
+                  onClick={() => handleComment(post._id)}
+                >
+                  Comment
+                </button>
+              </div>
+              <div className="mt-3">
+                <h6>Comments:</h6>
+                {post.comments.map((comment) => (
+                  <p key={comment._id} className="card-text">
+                    <strong>{comment.userId.name}</strong>: {comment.text}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
         ))

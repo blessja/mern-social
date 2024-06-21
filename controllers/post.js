@@ -93,10 +93,63 @@ const deletePost = async (req, res) => {
   }
 };
 
+// like the post
+const likePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user.id;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.likes.includes(userId)) {
+      post.likes.pull(userId);
+    } else {
+      post.likes.push(userId);
+    }
+
+    await post.save();
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// add comment
+const addComment = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { text } = req.body;
+    const userId = req.user.id;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const newComment = {
+      userId,
+      text,
+    };
+
+    post.comments.push(newComment);
+    await post.save();
+    res.status(201).json(post);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
   updatePost,
   deletePost,
+  likePost,
+  addComment,
 };

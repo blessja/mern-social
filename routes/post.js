@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../middleware/auth");
 const router = express.Router();
 const {
   createPost,
@@ -6,6 +7,8 @@ const {
   getPostById,
   updatePost,
   deletePost,
+  likePost,
+  addComment,
 } = require("../controllers/post");
 
 // Create a post
@@ -22,5 +25,9 @@ router.route("/:postId").put(updatePost);
 
 // Delete a post
 router.route("/:postId").delete(deletePost);
+
+router.put("/:postId/like", protect, likePost);
+
+router.post("/:postId/comment", protect, addComment);
 
 module.exports = router;
