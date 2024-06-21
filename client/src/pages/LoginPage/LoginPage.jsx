@@ -28,12 +28,12 @@ const LoginPage = () => {
     // If any field is missing
     if (!credentials.email || !credentials.password) {
       setIsLoading(false);
-      return Notify("Please Fill all the Feilds", "warn");
+      return Notify("Please fill all the fields", "warn");
     }
 
     try {
       const response = await axios.post(
-        "https://mern-social-lzba.onrender.com/api/auth/login",
+        "http://localhost:5000/api/auth/login",
         {
           email: credentials.email,
           password: credentials.password,
@@ -44,12 +44,12 @@ const LoginPage = () => {
           },
         }
       );
-      const data = await response.json();
+
+      const data = response.data;
 
       if (data.success) {
         localStorage.setItem("auth", JSON.stringify(data)); // Save auth details in local storage
         setAuth(data);
-        console.log(data);
         setIsLoading(false);
         navigate("/"); // Go to home page
         return Notify("You are successfully logged in", "success");
@@ -62,7 +62,6 @@ const LoginPage = () => {
       return Notify("Internal server error", "error");
     }
   };
-
   return (
     <Form className="auth__form" onSubmit={loginHandler}>
       <h3 className="text-center mb-5">Login to Your Account</h3>
