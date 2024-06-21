@@ -5,6 +5,7 @@ import { Form, Button, Spinner } from "react-bootstrap";
 
 import { AuthState } from "../../context/AuthProvider";
 import { Notify } from "../../utils";
+import axios from "axios";
 
 const LoginPage = () => {
   const [credentials, setCredentials] = useState({
@@ -31,16 +32,18 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        "https://mern-social-lzba.onrender.com/api/auth/login",
+        {
           email: credentials.email,
           password: credentials.password,
-        }),
-      });
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = await response.json();
 
       if (data.success) {
