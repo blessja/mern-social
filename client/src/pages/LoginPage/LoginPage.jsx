@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Spinner } from "react-bootstrap";
-import { FaUserAlt } from "react-icons/fa";
+// import { FaUserAlt } from "react-icons/fa";
 
 import { AuthState } from "../../context/AuthProvider";
 import { Notify } from "../../utils";
@@ -111,7 +111,7 @@ const LoginPage = () => {
         )}
       </Button>
 
-      <Button
+      {/* <Button
         variant="danger"
         type="button"
         tabIndex="4"
@@ -122,7 +122,7 @@ const LoginPage = () => {
       >
         <FaUserAlt className="me-2" />
         Get Guest User Credentials
-      </Button>
+      </Button> */}
 
       <Form.Group className="mb-3 text-center" controlId="register">
         <span>

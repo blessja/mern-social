@@ -22,7 +22,7 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/posts/${editingPostId}`,
+        `https://mern-social-lzba.onrender.com/api/posts/${editingPostId}`,
         { content: editedContent },
         {
           headers: {
@@ -43,7 +43,7 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
   const handleLike = async (postId) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/posts/${postId}/like`,
+        `https://mern-social-lzba.onrender.com/api/posts/${postId}/like`,
         {},
         {
           headers: {
@@ -64,7 +64,7 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
   const handleComment = async (postId) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/posts/${postId}/comment`,
+        `https://mern-social-lzba.onrender.com/api/posts/${postId}/comment`,
         { text: newComment },
         {
           headers: {

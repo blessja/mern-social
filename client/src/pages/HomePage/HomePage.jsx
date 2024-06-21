@@ -16,12 +16,15 @@ const HomePage = () => {
       try {
         console.log("Fetching posts with auth state:", auth);
 
-        const response = await axios.get("http://localhost:5000/api/posts", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth?.token}`,
-          },
-        });
+        const response = await axios.get(
+          "https://mern-social-lzba.onrender.com/api/posts",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth?.token}`,
+            },
+          }
+        );
 
         console.log("Full response:", response);
         const data = response.data;
@@ -58,7 +61,7 @@ const HomePage = () => {
       console.log("Creating post with userId:", auth.userId);
 
       const response = await axios.post(
-        "http://localhost:5000/api/posts",
+        "https://mern-social-lzba.onrender.com/api/posts",
         {
           userId: auth.userId,
           content: newPostContent,
@@ -87,7 +90,7 @@ const HomePage = () => {
   const updatePost = async (postId, updatedContent) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/posts/${postId}`,
+        `https://mern-social-lzba.onrender.com/api/posts/${postId}`,
         { content: updatedContent },
         {
           headers: {
@@ -116,7 +119,7 @@ const HomePage = () => {
   const deletePost = async (postId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/posts/${postId}`,
+        `https://mern-social-lzba.onrender.com/api/posts/${postId}`,
         {
           headers: {
             "Content-Type": "application/json",
