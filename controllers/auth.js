@@ -170,6 +170,7 @@ const resetPassword = async (req, res, next) => {
 const sendAuth = (user, statusCode, res) => {
   return res.status(statusCode).json({
     success: true,
+    userId: user._id,
     name: user.name,
     email: user.email,
     profilePic: user.profilePic,

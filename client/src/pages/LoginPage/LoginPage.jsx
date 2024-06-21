@@ -46,6 +46,7 @@ const LoginPage = () => {
       if (data.success) {
         localStorage.setItem("auth", JSON.stringify(data)); // Save auth details in local storage
         setAuth(data);
+        console.log(data);
         setIsLoading(false);
         navigate("/"); // Go to home page
         return Notify("You are successfully logged in", "success");

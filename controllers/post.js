@@ -7,13 +7,18 @@ const createPost = async (req, res, next) => {
   const { userId, content } = req.body;
 
   try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return next(new ErrorResponse("user not found", 404));
-
-      //   return res.status(404).json({ message: "User not found" });
+    // Check if userId is provided
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
     }
 
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Create a new post associated with the user
     const newPost = new Post({ userId, content });
     await newPost.save();
 
@@ -26,7 +31,7 @@ const createPost = async (req, res, next) => {
 // Get all posts
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate("userId", "username");
+    const posts = await Post.find().populate("userId", "name");
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -38,7 +43,7 @@ const getPostById = async (req, res) => {
   const { postId } = req.params;
 
   try {
-    const post = await Post.findById(postId).populate("userId", "username");
+    const post = await Post.findById(postId).populate("userId", "name");
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
@@ -51,46 +56,40 @@ const getPostById = async (req, res) => {
 
 // Update a post
 const updatePost = async (req, res) => {
-  const { postId } = req.params;
-  const { content } = req.body;
-
   try {
-    const post = await Post.findById(postId);
+    const { postId } = req.params;
+    const { content } = req.body;
+
+    const post = await Post.findByIdAndUpdate(
+      postId,
+      { content },
+      { new: true }
+    );
+
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    if (post.userId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
-
-    post.content = content;
-    await post.save();
-
     res.status(200).json(post);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // Delete a post
 const deletePost = async (req, res) => {
-  const { postId } = req.params;
-
   try {
-    const post = await Post.findById(postId);
+    const { postId } = req.params;
+
+    const post = await Post.findByIdAndDelete(postId);
+
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    if (post.userId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
-
-    await post.remove();
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
