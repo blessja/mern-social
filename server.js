@@ -12,7 +12,7 @@ app.use(express.json());
 connectDB(); // Connect to databse
 
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: ["http://localhost:3000", "https://mern-social-five.vercel.app"],
 };
 
 app.use(cors(corsOptions));
