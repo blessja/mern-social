@@ -3,8 +3,6 @@ import axios from "axios";
 import { AuthState } from "../../context/AuthProvider";
 
 const PostFeed = ({ posts, updatePost, deletePost }) => {
-  console.log("Rendering PostFeed with posts:", posts);
-
   const { auth } = AuthState();
 
   const [editingPostId, setEditingPostId] = useState(null);
@@ -21,9 +19,25 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
     setEditedContent("");
   };
 
-  const handleUpdate = () => {
-    updatePost(editingPostId, editedContent);
-    cancelEditing();
+  const handleUpdate = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/posts/${editingPostId}`,
+        { content: editedContent },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        updatePost(editingPostId, response.data); // Update the post after editing
+        cancelEditing();
+      }
+    } catch (error) {
+      console.error("Error updating post:", error);
+    }
   };
 
   const handleLike = async (postId) => {
@@ -39,8 +53,8 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
         }
       );
       if (response.status === 200) {
-        // Update the post with the new likes
-        updatePost(postId, response.data.content); // Adjust as necessary
+        updatePost(postId, response.data); // Update the post with the new likes
+        window.location.reload(); // Refresh the page
       }
     } catch (error) {
       console.error("Error liking post:", error);
@@ -60,9 +74,9 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
         }
       );
       if (response.status === 201) {
-        // Update the post with the new comment
-        updatePost(postId, response.data.content); // Adjust as necessary
+        updatePost(postId, response.data); // Update the post with the new comment
         setNewComment("");
+        window.location.reload(); // Refresh the page
       }
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -107,18 +121,22 @@ const PostFeed = ({ posts, updatePost, deletePost }) => {
                   Posted on {new Date(post.createdAt).toLocaleString()}
                 </small>
               </p>
-              <button
-                className="btn btn-primary"
-                onClick={() => startEditing(post._id, post.content)}
-              >
-                Edit
-              </button>
-              <button
-                className="btn btn-danger ms-2"
-                onClick={() => deletePost(post._id)}
-              >
-                Delete
-              </button>
+              {post.userId._id === auth.userId && (
+                <>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => startEditing(post._id, post.content)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger ms-2"
+                    onClick={() => deletePost(post._id)}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
               <button
                 className="btn btn-info ms-2"
                 onClick={() => handleLike(post._id)}

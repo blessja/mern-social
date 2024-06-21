@@ -24,7 +24,7 @@ router.route("/:postId").get(getPostById);
 router.route("/:postId").put(updatePost);
 
 // Delete a post
-router.route("/:postId").delete(deletePost);
+router.delete("/:postId", protect, deletePost);
 
 router.put("/:postId/like", protect, likePost);
 

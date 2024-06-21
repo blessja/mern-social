@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthState } from "../../context/AuthProvider";
-import { Notify } from "../../utils";
+// import { Notify } from "../../utils";
 import axios from "axios";
 import PostFeed from "../../components/Posts/PostFeed";
 
@@ -29,16 +29,16 @@ const HomePage = () => {
 
         if (response.status === 200) {
           setPosts(data || []); // Adjust based on actual response structure
-          Notify("Data fetched successfully", "success");
+          // Notify("Data fetched successfully", "success");
         } else {
           navigate("/login");
-          Notify("You are not authorized, please login", "error");
+          // Notify("You are not authorized, please login", "error");
         }
       } catch (error) {
         console.error("Error fetching data:", error);
         localStorage.removeItem("auth");
         navigate("/login");
-        Notify("Internal server error", "error");
+        // Notify("Internal server error", "error");
       }
     };
 
@@ -74,13 +74,13 @@ const HomePage = () => {
       if (response.status === 201) {
         setPosts([...posts, response.data]);
         setNewPostContent("");
-        Notify("Post created successfully", "success");
+        // Notify("Post created successfully", "success");
       } else {
-        Notify("Failed to create post", "error");
+        // Notify("Failed to create post", "error");
       }
     } catch (error) {
       console.error("Error creating post:", error);
-      Notify("Error creating post", "error");
+      // Notify("Error creating post", "error");
     }
   };
 
@@ -103,13 +103,13 @@ const HomePage = () => {
             post._id === postId ? { ...post, content: updatedContent } : post
           )
         );
-        Notify("Post updated successfully", "success");
+        // Notify("Post updated successfully", "success");
       } else {
-        Notify("Failed to update post", "error");
+        // Notify("Failed to update post", "error");
       }
     } catch (error) {
       console.error("Error updating post:", error);
-      Notify("Error updating post", "error");
+      // Notify("Error updating post", "error");
     }
   };
 
@@ -127,13 +127,13 @@ const HomePage = () => {
 
       if (response.status === 200) {
         setPosts(posts.filter((post) => post._id !== postId));
-        Notify("Post deleted successfully", "success");
+        // Notify("Post deleted successfully", "success");
       } else {
-        Notify("Failed to delete post", "error");
+        // Notify("Failed to delete post", "error");
       }
     } catch (error) {
       console.error("Error deleting post:", error);
-      Notify("Error deleting post", "error");
+      // Notify("Error deleting post", "error");
     }
   };
 
